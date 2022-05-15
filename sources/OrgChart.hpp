@@ -2,69 +2,86 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <deque>
 #include "Node.hpp"
 namespace ariel
 {
     /*inner classes declaration*/
-    class IterLevel;
-    class IterReverse;
-    class IterPre;
+    class Iterator;
 
     class OrgChart
     {
+        /*inner class - level Order iterator*/
+    public:
+        class Iterator
+        {
+        private:
+            Node *_curr;
+            std::string _flag;
+
+        public:
+            /*constructor*/
+            Iterator(std::string flag, Node *root = nullptr);
+            
+            /*destructor*/
+            ~Iterator() {}
+
+            /*get curr employee reference (Node) */
+            Node& operator*() const
+            {
+                return *_curr;
+            }
+
+            /*get curr employee ptr (Node) */
+            Node* operator->() const
+            {
+                return _curr;
+            }
+
+            /* ++iter */
+            Iterator& operator++();
+
+
+            /* iter++ */
+            const Iterator operator++(int);
+
+
+            /* equals */
+            friend bool operator==(const Iterator &a, const Iterator &b)
+            {
+                return a._curr == b._curr;
+            }
+
+            /* not equals */
+            friend bool operator!=(const Iterator &a, const Iterator &b)
+            {
+                return a._curr != b._curr;
+            }
+
+            Iterator begin();
+
+            Iterator end();
+
+
+        }; // end iter
+
     private:
-        Node* root;
+        Node* _root;
         size_t _size;
-        friend std::ostream& operator<<(std::ostream& out, const OrgChart& org);
+        friend std::ostream &operator<<(std::ostream &out, const OrgChart &org);
 
     public:
         OrgChart();
         ~OrgChart();
-        OrgChart& add_root(std::string root);
-        OrgChart& add_sub(std::string employer, std::string employee);
-        IterLevel begin_level_order();
-        IterLevel end_level_order();
-        IterReverse begin_reverse_order();
-        IterReverse end_reverse_order();
-        IterPre begin_preorder();
-        IterPre end_preorder();
+        OrgChart &add_root(std::string name);
+        OrgChart &add_sub(std::string employer, std::string employee);
+        Iterator begin_level_order();
+        Iterator end_level_order();
+        Iterator begin_reverse_order();
+        Iterator end_reverse_order();
+        Iterator begin_preorder();
+        Iterator end_preorder();
 
-        /*inner class - level Order iterator*/
-        class IterLevel
-        {
-        private:
-        Node* _curr;
-        public:
-            IterLevel(Node* root = nullptr)
-                : _curr(root){}
-            ~IterLevel(){}
-            std::string& operator*() const; // return curr employee's name
-            std::string* operator->() const; // return ptr to curr employee
-            IterLevel& operator++(); // ++iter
-            const IterLevel operator++(int); // ??
-            bool operator==(const IterLevel& other); // curr == other.curr
-            bool operator!=(const IterLevel& other); // curr != other.curr
-            IterLevel begin(); // tree root wrapped in IterLevel type
-            IterLevel end(); // last node in tree wrapped in IterLevel type
-       
-        }; // end LevelOrder_iter
-
-        class IterReverse
-        {
-        private:
-        public:
-            IterReverse(){}
-            ~IterReverse(){}
-
-        }; // end ReversOrder_iter
-
-        class IterPre
-        {
-        private:
-        public:
-            IterPre(){}
-            ~IterPre(){}
-        }; // end PreOrder_iter
+        Iterator find(std::string name);
     };
-
 }

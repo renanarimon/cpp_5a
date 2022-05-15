@@ -8,16 +8,23 @@ namespace ariel
     {
     public:
         std::string _name;
-        std::vector<Node *> _employees;
+        std::vector<Node *> _children;
+        Node* _parent;
+        Node* _bro;
+
         Node(std::string name)
         {
             this->_name = name;
+            this->_parent = nullptr;
+            this->_bro = nullptr;
             std::vector<Node *> v;
-            this->_employees = v;
+            this->_children = v;
         }
         Node(Node& other){
             this->_name = other._name;
-            this->_employees = other._employees;
+            this->_parent = other._parent;
+            this->_bro = other._bro;
+            this->_children = other._children;
         }
         ~Node() {}
     };
